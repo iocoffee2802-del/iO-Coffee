@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#3b2418">
+  <title>AZ Coffee Management</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><div class="brand-mark">AZ</div><div><strong>AZ COFFEE</strong><small>MANAGEMENT SYSTEM</small></div></div>
+    <div class="top-actions"><span class="local-pill">● Dữ liệu lưu trên thiết bị</span><button class="btn btn-light" id="importBtn">Nhập dữ liệu</button><button class="btn btn-light" id="exportBtn">Xuất dữ liệu</button></div>
+  </header>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="side-label">KHÔNG GIAN LÀM VIỆC</div>
+      <button class="nav active" data-page="dashboard">▦ <span>Tổng quan</span></button>
+      <button class="nav" data-page="lots">▤ <span>Kho cà phê</span></button>
+      <button class="nav" data-page="roasting">◉ <span>Rang xay</span></button>
+      <button class="nav" data-page="cupping">◌ <span>Cupping</span></button>
+      <button class="nav" data-page="traceability">⌁ <span>Truy xuất nguồn gốc</span></button>
+      <div class="side-note"><strong>AZ COFFEE</strong><p>Quản lý chất lượng từ nông trại đến tách cà phê.</p><small>Phiên bản 1.0.0</small></div>
+    </aside>
+    <main class="main">
+      <section class="page active" id="page-dashboard">
+        <div class="page-heading"><div><p class="eyebrow">WORKSPACE / OVERVIEW</p><h1>Tổng quan</h1><p class="muted">Theo dõi tình hình nguyên liệu, rang xay và chất lượng cà phê.</p></div><button class="btn btn-primary" data-go="lots">＋ Thêm lô cà phê</button></div>
+        <div class="stats">
+          <article class="stat"><span class="stat-icon">▤</span><span class="stat-label">Tổng lô cà phê</span><strong id="statLots">0</strong><small>Đang quản lý</small></article>
+          <article class="stat"><span class="stat-icon">⚖</span><span class="stat-label">Tồn kho hiện tại</span><strong id="statStock">0 kg</strong><small>Tổng khối lượng còn lại</small></article>
+          <article class="stat"><span class="stat-icon">◉</span><span class="stat-label">Mẻ rang</span><strong id="statRoasts">0</strong><small>Đã ghi nhận</small></article>
+          <article class="stat"><span class="stat-icon">★</span><span class="stat-label">Mẫu cupping</span><strong id="statCuppings">0</strong><small>Đã đánh giá</small></article>
+        </div>
+        <div class="grid-two">
+          <section class="panel"><div class="panel-head"><div><h2>Tồn kho theo lô</h2><p class="muted">Khối lượng cà phê còn lại</p></div><button class="text-btn" data-go="lots">Xem tất cả →</button></div><div id="stockPreview" class="empty">Chưa có dữ liệu. Hãy thêm lô cà phê đầu tiên.</div></section>
+          <section class="panel"><div class="panel-head"><div><h2>Hoạt động gần đây</h2><p class="muted">Các cập nhật mới trong hệ thống</p></div></div><div id="activityPreview" class="empty">Chưa có hoạt động.</div></section>
+        </div>
+        <section class="panel quick-panel"><div><h2>Bắt đầu quản lý cà phê</h2><p class="muted">Tạo mã lô, ghi nhận mẻ rang và đánh giá chất lượng bằng cupping.</p></div><div class="quick-actions"><button class="btn btn-outline" data-go="lots">＋ Nhập kho</button><button class="btn btn-outline" data-go="roasting">＋ Ghi mẻ rang</button><button class="btn btn-outline" data-go="cupping">＋ Tạo phiếu cupping</button></div></section>
+      </section>
+
+      <section class="page" id="page-lots">
+        <div class="page-heading"><div><p class="eyebrow">INVENTORY</p><h1>Kho cà phê</h1><p class="muted">Quản lý nguyên liệu, mã lô, nguồn gốc và khối lượng tồn.</p></div><button class="btn btn-primary" id="addLotBtn">＋ Thêm lô cà phê</button></div>
+        <div class="toolbar"><input id="lotSearch" placeholder="Tìm theo mã lô, giống, vùng trồng..."><select id="lotTypeFilter"><option value="">Tất cả giống</option><option>Arabica</option><option>Robusta</option><option>Blend</option><option>Khác</option></select></div>
+        <div class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>Mã lô</th><th>Giống</th><th>Vùng trồng</th><th>Khối lượng nhập</th><th>Còn lại</th><th>Ngày nhập</th><th></th></tr></thead><tbody id="lotsTable"></tbody></table></div><div id="lotsEmpty" class="empty">Chưa có lô cà phê. Chọn “Thêm lô cà phê” để bắt đầu.</div></div>
+      </section>
+
+      <section class="page" id="page-roasting">
+        <div class="page-heading"><div><p class="eyebrow">ROASTING LOG</p><h1>Rang xay</h1><p class="muted">Ghi nhận hồ sơ rang, sản lượng và tỷ lệ hao hụt.</p></div><button class="btn btn-primary" id="addRoastBtn">＋ Ghi mẻ rang</button></div>
+        <div class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>Ngày rang</th><th>Mã mẻ</th><th>Mã lô xanh</th><th>Đầu vào</th><th>Đầu ra</th><th>Hao hụt</th><th></th></tr></thead><tbody id="roastsTable"></tbody></table></div><div id="roastsEmpty" class="empty">Chưa có mẻ rang nào được ghi nhận.</div></div>
+      </section>
+
+      <section class="page" id="page-cupping">
+        <div class="page-heading"><div><p class="eyebrow">QUALITY CONTROL</p><h1>Cupping</h1><p class="muted">Lưu điểm số, mô tả cảm quan và đánh giá mẫu cà phê.</p></div><button class="btn btn-primary" id="addCuppingBtn">＋ Tạo phiếu cupping</button></div>
+        <div class="cards-grid" id="cuppingCards"></div><div id="cuppingEmpty" class="empty panel">Chưa có phiếu cupping nào.</div>
+      </section>
+
+      <section class="page" id="page-traceability">
+        <div class="page-heading"><div><p class="eyebrow">ORIGIN & TRACEABILITY</p><h1>Truy xuất nguồn gốc</h1><p class="muted">Tra cứu hành trình từng lô cà phê từ vùng trồng đến chế biến.</p></div></div>
+        <div class="panel trace-panel"><label for="traceSelect">Chọn mã lô cà phê</label><select id="traceSelect"><option value="">-- Chọn lô cà phê --</option></select><div id="traceResult" class="empty">Chọn một mã lô để xem thông tin truy xuất.</div></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="lotDialog"><form id="lotForm" method="dialog"><div class="dialog-head"><div><p class="eyebrow">INVENTORY</p><h2>Thêm lô cà phê</h2></div><button type="button" class="x-btn" data-close>×</button></div><div class="form-grid">
+    <label>Mã lô *<input name="code" required placeholder="VD: AZ-ARA-001"></label>
+    <label>Giống cà phê<select name="type"><option>Arabica</option><option>Robusta</option><option>Blend</option><option>Khác</option></select></label>
+    <label>Vùng trồng<input name="region" placeholder="VD: Cầu Đất, Lâm Đồng"></label>
+    <label>Nông trại / Nhà cung cấp<input name="farm" placeholder="Tên nông trại hoặc nhà cung cấp"></label>
+    <label>Phương pháp sơ chế<input name="process" placeholder="Washed, Natural, Honey..."></label>
+    <label>Khối lượng nhập (kg) *<input name="weight" type="number" min="0.01" step="0.01" required></label>
+    <label>Ngày nhập<input name="date" type="date"></label>
+    <label>Mùa vụ<input name="harvest" placeholder="VD: 2025/2026"></label>
+    <label class="full">Ghi chú<textarea name="notes" rows="2" placeholder="Độ ẩm, độ cao, chứng nhận..."></textarea></label>
+  </div><div class="dialog-actions"><button type="button" class="btn btn-outline" data-close>Hủy</button><button class="btn btn-primary" type="submit">Lưu lô cà phê</button></div></form></dialog>
+
+  <dialog id="roastDialog"><form id="roastForm" method="dialog"><div class="dialog-head"><div><p class="eyebrow">ROASTING LOG</p><h2>Ghi nhận mẻ rang</h2></div><button type="button" class="x-btn" data-close>×</button></div><div class="form-grid">
+    <label>Mã mẻ rang *<input name="code" required placeholder="VD: R-2026-001"></label>
+    <label>Lô cà phê xanh *<select name="lotId" id="roastLotSelect" required></select></label>
+    <label>Ngày rang<input name="date" type="date"></label>
+    <label>Khối lượng đầu vào (kg) *<input name="input" type="number" min="0.01" step="0.01" required></label>
+    <label>Khối lượng sau rang (kg) *<input name="output" type="number" min="0.01" step="0.01" required></label>
+    <label>Nhiệt độ kết thúc (°C)<input name="temp" type="number" step="0.1"></label>
+    <label class="full">Ghi chú hồ sơ rang<textarea name="notes" rows="2" placeholder="Thời gian rang, profile, màu rang..."></textarea></label>
+  </div><div class="dialog-actions"><button type="button" class="btn btn-outline" data-close>Hủy</button><button class="btn btn-primary" type="submit">Lưu mẻ rang</button></div></form></dialog>
+
+  <dialog id="cuppingDialog"><form id="cuppingForm" method="dialog"><div class="dialog-head"><div><p class="eyebrow">QUALITY CONTROL</p><h2>Phiếu cupping</h2></div><button type="button" class="x-btn" data-close>×</button></div><div class="form-grid">
+    <label>Mã mẫu *<input name="sample" required placeholder="VD: CUP-001"></label>
+    <label>Lô cà phê<select name="lotId" id="cuppingLotSelect"></select></label>
+    <label>Ngày đánh giá<input name="date" type="date"></label>
+    <label>Người đánh giá<input name="taster" placeholder="Tên người cupping"></label>
+    <label>Điểm tổng (0–100) *<input name="score" type="number" min="0" max="100" step="0.25" required></label>
+    <label>Hương thơm / Fragrance<input name="aroma" placeholder="Floral, chocolate..."></label>
+    <label>Flavor<input name="flavor" placeholder="Mô tả hương vị"></label>
+    <label>Acidity / Body<input name="structure" placeholder="Độ chua, thể chất"></label>
+    <label class="full">Nhận xét<textarea name="notes" rows="2" placeholder="Aftertaste, balance, defects, kết luận..."></textarea></label>
+  </div><div class="dialog-actions"><button type="button" class="btn btn-outline" data-close>Hủy</button><button class="btn btn-primary" type="submit">Lưu phiếu cupping</button></div></form></dialog>
+  <input type="file" id="importFile" accept="application/json" hidden>
+  <div id="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
